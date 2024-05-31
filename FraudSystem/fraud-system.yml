@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: fraud-system:1.0
+          image: fraud-system:1.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8082

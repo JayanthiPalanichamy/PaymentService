@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 @Slf4j
-@ConditionalOnExpression("!${queue.selected}")
+@ConditionalOnExpression("!${queue.broker.selected}")
 public class BrokerWebAdapter implements BrokerPort {
     private final RestTemplate brokerRest;
 
@@ -25,7 +25,7 @@ public class BrokerWebAdapter implements BrokerPort {
 
     @Override
     public void sendForFraudCheck(Payment payment) {
-        log.info("Sending Payment with transaction ID is Successfully to Broker Service: {}", payment.getTransactionId());
+        log.info("Sending Payment JSON to Broker Service via REST ENDPOINT with transaction ID : {}", payment.getTransactionId());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         ObjectMapper mapper = new ObjectMapper();

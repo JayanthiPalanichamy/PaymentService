@@ -19,8 +19,8 @@ public class BrokerSystemQueueAdapter implements BrokerSystemPort {
     }
 
     @Override
-    public void sendToBrokerSystem(String paymentXmlString) {
-        log.info("Send payment xml string to Broker System");
-        jmsTemplate.convertAndSend(this.destinationName, paymentXmlString);
+    public void sendToBrokerSystem(String fraudCheckResultXmlString) {
+        log.info("Send FraudCheckResult xml string to Broker System");
+        jmsTemplate.convertAndSend(this.destinationName, fraudCheckResultXmlString);
     }
 }

@@ -33,10 +33,11 @@ public class BrokerQueueReceiver {
     @JmsListener(destination = "${destination.payment.receiver.name}")
     public void receiveMessageFromPaymentSystem(String message) {
         log.info("Message is received from topic subscribed to Payment system");
-
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             Payment payment = objectMapper.readValue(message, Payment.class);
+            log.info("Received Payment via Queue with transaction ID: {}", payment.getTransactionId());
+            log.info("Received call from payment processing service to convert and send to Fraud Service {}", payment.getTransactionId());
             fraudCheckUseCase.convertAndSendToFraudSystem(payment);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

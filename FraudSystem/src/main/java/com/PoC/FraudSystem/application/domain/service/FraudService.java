@@ -31,6 +31,7 @@ public class FraudService implements FraudCheckUseCase {
            Payment payment = getPaymentFromXml(paymentXmlString);
            FraudCheckResult fraudCheckResult = getFraudValidation().validate(payment);
            String fraudCheckResultXml = convertFraudCheckResultToXml(fraudCheckResult);
+           log.info("Send FraudCheckResult to Payment System with Transaction ID {}", fraudCheckResult.getTransactionId());
            brokerSystemPort.sendToBrokerSystem(fraudCheckResultXml);
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -39,6 +40,7 @@ public class FraudService implements FraudCheckUseCase {
 
     private Payment getPaymentFromXml(String paymentXmlString) throws JAXBException {
         try {
+            log.info("Convert paymentXml string to Payment Object");
             JAXBContext context = JAXBContext.newInstance(Payment.class);
             StringReader reader = new StringReader(paymentXmlString);
             return  (Payment) context.createUnmarshaller().unmarshal(reader);
@@ -50,6 +52,7 @@ public class FraudService implements FraudCheckUseCase {
 
     private String convertFraudCheckResultToXml(FraudCheckResult fraudCheckResult) throws JAXBException {
         try {
+            log.info("Convert FraudCheckResult Object to XML String");
             StringWriter sw = new StringWriter();
             JAXBContext jaxbContext = JAXBContext.newInstance(FraudCheckResult.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();

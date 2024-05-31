@@ -26,7 +26,7 @@ public class PaymentSystemQueueAdapter implements PaymentSystemPort {
 
     @Override
     public void sendToPaymentSystem(FraudCheckResult fraudCheckResult) {
-        log.info("Send payment xml string to Payment Processing System");
+        log.info("Send FraudCheckResult JSON string to Payment Processing System via Queue with Transaction ID: {}", fraudCheckResult.getTransactionId());
         try {
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String fraudCheckXmlString = ow.writeValueAsString(fraudCheckResult);

@@ -20,7 +20,7 @@ public class FraudQueueReceiver {
 
     @JmsListener(destination = "${destination.broker.receiver.name}")
     public void showReceivedMessage(String message) {
-        log.info("Message is received from topic subscribed to Fraud system");
+        log.info("Message is received from topic subscribed to Broker system");
         fraudCheckUseCase.checkForFraud(message);
     }
 

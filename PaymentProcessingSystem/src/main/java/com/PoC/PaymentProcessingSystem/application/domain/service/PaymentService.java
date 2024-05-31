@@ -6,7 +6,6 @@ import com.PoC.PaymentProcessingSystem.application.port.inbound.FraudCheckUseCas
 import com.PoC.PaymentProcessingSystem.application.port.inbound.PaymentUseCase;
 import com.PoC.PaymentProcessingSystem.application.port.outbound.BrokerPort;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +30,7 @@ public class PaymentService implements PaymentUseCase, FraudCheckUseCase {
     public void result(FraudCheckResult fraudCheckResult) {
         if(fraudCheckResult.isFraudDetected()) {
             log.error("Fraud is detected with transaction ID: {}", fraudCheckResult.getTransactionId());
+            log.info("Cancel Payment for transaction ID : {}", fraudCheckResult.getTransactionId());
             return;
         }
         log.info("No Fraud is detected with transaction ID: {}", fraudCheckResult.getTransactionId());

@@ -20,7 +20,7 @@ public class FraudSystemQueueAdapter implements FraudSystemPort {
 
     @Override
     public void sendForFraudSystem(String paymentXmlString) {
-        log.info("Send payment xml string to Fraud System");
+        log.info("Send Payment xml string to Fraud System");
         jmsTemplate.convertAndSend(this.destinationName, paymentXmlString);
     }
 }

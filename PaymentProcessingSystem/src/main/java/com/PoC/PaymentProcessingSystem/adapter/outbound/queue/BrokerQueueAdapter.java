@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-@ConditionalOnExpression("${queue.selected}")
+@ConditionalOnExpression("${queue.broker.selected}")
 public class BrokerQueueAdapter implements BrokerPort {
     private final JmsTemplate jmsTemplate;
 
@@ -26,7 +26,7 @@ public class BrokerQueueAdapter implements BrokerPort {
 
     @Override
     public void sendForFraudCheck(Payment payment) {
-        log.info("Send payment xml string to payment System");
+        log.info("Sending Payment JSON to Broker Service via Queue with transaction ID : {}", payment.getTransactionId());
         try{
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String paymentXmlString = ow.writeValueAsString(payment);

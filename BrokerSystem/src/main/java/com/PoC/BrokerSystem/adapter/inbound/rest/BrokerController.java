@@ -21,9 +21,10 @@ public class BrokerController {
     private final FraudCheckUseCase fraudCheckUseCase;
 
     @PostMapping("/fraud-check")
-    void fraudCheck(@Valid @RequestBody Payment payment) {
-        log.info("Received call from payment processing service to convert and send to Fraud Service {}", payment.getTransactionId());
+    void fraudCheck(@RequestBody Payment payment) {
+        log.info("Received Payment via REST endpoint with transaction ID: {}", payment.getTransactionId());
         try {
+            log.info("Received call from payment processing service to convert and send to Fraud Service {}", payment.getTransactionId());
             fraudCheckUseCase.convertAndSendToFraudSystem(payment);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

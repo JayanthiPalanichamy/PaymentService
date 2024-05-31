@@ -27,6 +27,7 @@ public class PaymentQueueReceiver {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             FraudCheckResult fraudCheckResult = objectMapper.readValue(message, FraudCheckResult.class);
+            log.info("Received FraudCheckResult via QUEUE with transaction ID: {}", fraudCheckResult.getTransactionId());
             fraudCheckUseCase.result(fraudCheckResult);
         } catch (JsonProcessingException e) {
             e.printStackTrace();

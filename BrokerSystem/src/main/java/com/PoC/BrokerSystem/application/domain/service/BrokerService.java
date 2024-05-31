@@ -29,7 +29,7 @@ public class BrokerService implements FraudCheckUseCase, PaymentUseCase {
 
     @Override
     public void convertAndSendToFraudSystem(Payment payment) {
-        log.info("Convert payment string into xml string");
+        log.info("Convert Payment string into xml string with Transaction ID {}", payment.getTransactionId());
         try {
             StringWriter stringWriter = new StringWriter();
             JAXBContext jaxbContext = JAXBContext.newInstance(Payment.class);
@@ -46,12 +46,11 @@ public class BrokerService implements FraudCheckUseCase, PaymentUseCase {
 
     @Override
     public void convertAndSendToPaymentSystem(String fraudCheckXmlString) {
-        log.info("Convert Fraud Check xml string to Object");
         try {
             JAXBContext context = JAXBContext.newInstance(FraudCheckResult.class);
             StringReader reader = new StringReader(fraudCheckXmlString);
             FraudCheckResult fraudCheckResult = (FraudCheckResult) context.createUnmarshaller().unmarshal(reader);
-            log.info("Send FraudCheck to Payment System");
+            log.info("Send FraudCheck to Payment System with Transaction ID {}", fraudCheckResult.getTransactionId());
             paymentSystemPort.sendToPaymentSystem(fraudCheckResult);
         } catch (JAXBException e) {
             log.error("Error Converting Fraud Check xml string to Object {}", e.getMessage());
