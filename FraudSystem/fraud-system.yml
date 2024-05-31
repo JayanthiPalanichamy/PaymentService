@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fraud-system
+  namespace: fs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fraud-system
+  template:
+    metadata:
+      labels:
+        app: fraud-system
+    spec:
+      containers:
+        - name: app
+          image: fraud-system:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8082
+          env:
+            - name: ACTIVEMQ_URL
+              value: "tcp://amq.amq.svc.cluster.local:61616"
+            - name: ACTIVEMQ_USERNAME
+              value: "admin"
+            - name: ACTIVEMQ_PASSWORD
+              value: "admin"
+            - name : TOPIC_FS_TO_BS
+              value: "fraud-to-broker-topic"
+            - name: TOPIC_BS_TO_FS
+              value: "broker-to-fraud-topic"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fraud-system
+  namespace: fs
+spec:
+  selector:
+    app: fraud-system
+  ports:
+    - port: 80
+      targetPort: 8082
+  type: LoadBalancer

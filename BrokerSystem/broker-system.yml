@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broker-system
+  namespace: bs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broker-system
+  template:
+    metadata:
+      labels:
+        app: broker-system
+    spec:
+      containers:
+        - name: app
+          image: broker-system:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+          env:
+            - name: PAYMENT_REST_URL
+              value: "payment-processing-system.pps.svc.cluster.local"
+            - name: ACTIVEMQ_URL
+              value: "tcp://amq.amq.svc.cluster.local:61616"
+            - name: ACTIVEMQ_USERNAME
+              value: "admin"
+            - name: ACTIVEMQ_PASSWORD
+              value: "admin"
+            - name: USE_QUEUE_FOR_PAYMENT_CONNECTION
+              value: "true"
+            - name: TOPIC_PPS_TO_BS
+              value: "payment-to-broker-topic"
+            - name: TOPIC_BS_TO_PPS
+              value: "broker-to-payment-topic"
+            - name : TOPIC_FS_TO_BS
+              value: "fraud-to-broker-topic"
+            - name: TOPIC_BS_TO_FS
+              value: "broker-to-fraud-topic"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker-system
+  namespace: bs
+spec:
+  selector:
+    app: broker-system
+  ports:
+    - port: 80
+      targetPort: 8081
+  type: LoadBalancer

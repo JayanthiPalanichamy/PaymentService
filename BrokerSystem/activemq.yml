@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: amq
+  namespace: amq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: amq
+  template:
+    metadata:
+      labels:
+        app: amq
+    spec:
+      containers:
+        - name: app
+          image: apache/activemq-classic:6.1.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 61616
+            - containerPort: 8161
+          env:
+            - name: AMQ_USER
+              value: "admin"
+            - name: AMQ_PASSWORD
+              value: "admin"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: amq
+  namespace: amq
+spec:
+  selector:
+    app: amq
+  ports:
+    - port: 8161
+      name: "ui"
+      targetPort: 8161
+    - port: 61616
+      protocol: TCP
+      name: "application"
+      targetPort: 61616
+  type: LoadBalancer

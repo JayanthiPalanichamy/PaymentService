@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-processing-system
+  namespace: pps
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-processing-system
+  template:
+    metadata:
+      labels:
+        app: payment-processing-system
+    spec:
+      containers:
+        - name: app
+          image: payment-processing-system:1.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: BROKER_REST_URL
+              value: "broker-system.bs.svc.cluster.local"
+            - name: ACTIVEMQ_URL
+              value: "tcp://amq.amq.svc.cluster.local:61616"
+            - name: ACTIVEMQ_USERNAME
+              value: "admin"
+            - name: ACTIVEMQ_PASSWORD
+              value: "admin"
+            - name: USE_QUEUE_FOR_BROKER_CONNECTION
+              value: "true"
+            - name: TOPIC_PPS_TO_BS
+              value: "payment-to-broker-topic"
+            - name: TOPIC_BS_TO_PPS
+              value: "broker-to-payment-topic"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-processing-system
+  namespace: pps
+spec:
+  selector:
+    app: payment-processing-system
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: LoadBalancer

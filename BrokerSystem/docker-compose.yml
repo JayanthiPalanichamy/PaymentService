@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  amqp-demo-broker:
+    container_name: amqp-broker-fraud-system
+    hostname: amqp-broker-fraud-system
+    image: apache/activemq-classic:6.1.0
+    ports:
+      # ui
+      - "8161:8161"
+      # all protocols
+      - "61616:61616"
+    environment:
+      AMQ_USER: "admin"
+      AMQ_PASSWORD: "admin"
+    networks:
+      - amqp-broker-fraud-system
+networks:
+  amqp-broker-fraud-system:
+    name: amqp-broker-fraud-system
