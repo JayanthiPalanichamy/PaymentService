@@ -30,7 +30,7 @@ public class PaymentSystemAdapter implements PaymentSystemPort {
 
         try {
             HttpEntity<String> request = new HttpEntity<>(mapper.writeValueAsString(fraudCheckResult), headers);
-            restTemplate.postForObject("/fraud-check", request, String.class);
+            restTemplate.postForObject("/verified-payment", request, String.class);
             log.info("Payment with transaction ID is Successfully sent to Payment Service: {}", fraudCheckResult.getTransactionId());
         } catch (JsonProcessingException e) {
             log.error("Error in Fraud Check Results with transaction id {} to json {}", fraudCheckResult.getTransactionId(), e.getMessage());

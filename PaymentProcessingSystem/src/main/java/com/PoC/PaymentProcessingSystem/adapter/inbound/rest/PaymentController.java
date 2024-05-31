@@ -23,7 +23,7 @@ public class PaymentController {
         paymentUseCase.processPayment(payment);
     }
 
-    @PostMapping("/fraud-check")
+    @PostMapping("/verified-payment")
     void resultForFraudCheck(@Valid @RequestBody FraudCheckResult fraudCheckResult) {
         fraudCheckUseCase.result(fraudCheckResult);
     }
